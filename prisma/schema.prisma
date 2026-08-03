@@ -1,8 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
@@ -10,4 +8,106 @@ generator client {
 
 datasource db {
   provider = "sqlite"
+}
+
+model Profile {
+  id         String       @id @default(uuid())
+  fullName   String
+  email      String?
+  phone      String?
+  location   String?
+  linkedin   String?
+  summary    String?
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  facts      Fact[]
+  experience Experience[]
+  education  Education[]
+  matches    Match[]
+  resumes    Resume[]
+}
+
+model Fact {
+  id          String   @id @default(uuid())
+  profileId   String
+  category    String // 'experience', 'education', 'skill', 'language', 'certification', 'other'
+  key         String // πχ 'python', 'german', 'project_management'
+  value       String // πχ '5 χρόνια εμπειρία', 'C1 επίπεδο'
+  details     String?
+  confidence  String   @default("user_confirmed") // 'user_confirmed', 'inferred', 'needs_verification'
+  source      String   @default("user_input") // 'user_input', 'cv_parsed', 'ai_generated'
+  allowedInCv Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  profile     Profile  @relation(fields: [profileId], references: [id])
+}
+
+model Experience {
+  id           String  @id @default(uuid())
+  profileId    String
+  company      String
+  title        String
+  startDate    String
+  endDate      String?
+  isCurrent    Boolean @default(false)
+  description  String?
+  achievements String?
+  tools        String?
+  sortOrder    Int     @default(0)
+  profile      Profile @relation(fields: [profileId], references: [id])
+}
+
+model Education {
+  id          String  @id @default(uuid())
+  profileId   String
+  institution String
+  degree      String
+  field       String?
+  startDate   String?
+  endDate     String?
+  sortOrder   Int     @default(0)
+  profile     Profile @relation(fields: [profileId], references: [id])
+}
+
+model Job {
+  id               String   @id @default(uuid())
+  url              String?
+  title            String
+  company          String?
+  location         String?
+  salary           String?
+  descriptionRaw   String
+  requirementsJson String? // JSON array αποθηκευμένο ως string
+  niceToHaveJson   String? // JSON array αποθηκευμένο ως string
+  status           String   @default("new") // 'new', 'analyzed', 'matched', 'archived'
+  createdAt        DateTime @default(now())
+  matches          Match[]
+  resumes          Resume[]
+}
+
+model Match {
+  id             String   @id @default(uuid())
+  jobId          String
+  profileId      String
+  overallScore   Float?
+  strengthsJson  String? // JSON
+  gapsJson       String? // JSON
+  questionsJson  String? // JSON
+  recommendation String? // 'strong_match', 'good_match', 'possible', 'long_shot'
+  createdAt      DateTime @default(now())
+  job            Job      @relation(fields: [jobId], references: [id])
+  profile        Profile  @relation(fields: [profileId], references: [id])
+  resumes        Resume[]
+}
+
+model Resume {
+  id          String   @id @default(uuid())
+  matchId     String
+  jobId       String
+  profileId   String
+  contentJson String? // το tailored CV ως JSON
+  status      String   @default("draft") // 'draft', 'approved', 'exported'
+  createdAt   DateTime @default(now())
+  match       Match    @relation(fields: [matchId], references: [id])
+  job         Job      @relation(fields: [jobId], references: [id])
+  profile     Profile  @relation(fields: [profileId], references: [id])
 }
