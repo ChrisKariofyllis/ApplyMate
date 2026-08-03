@@ -555,12 +555,6 @@ Then open a pull request on GitHub.
 - Add tests for important logic.
 - Do not add features outside the current scope without discussing them first.
 
-## License
-
-This project is licensed under the MIT License.
-
-See the `LICENSE` file for details.
-
 ## Author
 
 Created by **Chris Kariofyllis**.
