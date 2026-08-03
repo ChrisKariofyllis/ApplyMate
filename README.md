@@ -565,8 +565,8 @@ See the `LICENSE` file for details.
 
 Created by **Chris Kariofyllis**.
 
-- GitHub: https://github.com/YOUR_USERNAME
-- LinkedIn: https://www.linkedin.com/in/YOUR_PROFILE/
+- GitHub: https://github.com/ChrisKariofyllis
+- Personal Website: https://www.chriskariofyllis.com/
 
 ## Project Status
 
