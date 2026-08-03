@@ -2,7 +2,12 @@ import OpenAI from "openai";
 import { z } from "zod";
 
 export function createOpenAIClient(apiKey: string): OpenAI {
-  return new OpenAI({ apiKey });
+  const baseURL = process.env.OPENAI_BASE_URL;
+
+  return new OpenAI({
+    apiKey,
+    ...(baseURL ? { baseURL } : {}),
+  });
 }
 
 export async function getStructuredResponse<T>(
