@@ -3,7 +3,7 @@ import Link from "next/link";
 export default function Home() {
   return (
     <main className="min-h-screen p-8 font-[family-name:var(--font-geist-sans)]">
-      <h1 className="text-3xl font-bold tracking-tight">CareerAgent</h1>
+      <h1 className="text-3xl font-bold tracking-tight">ApplyMate</h1>
       <p className="mt-2 text-zinc-600">
         AI-powered career matching and resume generation.
       </p>

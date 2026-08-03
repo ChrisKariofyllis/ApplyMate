@@ -14,7 +14,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "CareerAgent",
+  title: "ApplyMate",
   description: "AI-powered career matching and resume generation",
 };
 
