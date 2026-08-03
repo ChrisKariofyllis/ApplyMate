@@ -563,7 +563,7 @@ See the `LICENSE` file for details.
 
 ## Author
 
-Created by **YOUR NAME**.
+Created by **Chris Kariofyllis**.
 
 - GitHub: https://github.com/YOUR_USERNAME
 - LinkedIn: https://www.linkedin.com/in/YOUR_PROFILE/
