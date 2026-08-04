@@ -10,12 +10,12 @@ export function Card({ title, children, className }: CardProps) {
   return (
     <section
       className={cn(
-        "rounded-xl border border-zinc-200 bg-white p-6 shadow-sm",
+        "rounded-xl border border-slate-200 bg-white p-6 shadow-sm",
         className
       )}
     >
       {title ? (
-        <h2 className="mb-4 text-lg font-semibold tracking-tight text-zinc-900">
+        <h2 className="mb-4 text-lg font-semibold tracking-tight text-slate-900">
           {title}
         </h2>
       ) : null}

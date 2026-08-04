@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { AppHeader } from "@/components/ui/AppHeader";
 import "./globals.css";
 
 const geistSans = localFont({
@@ -26,9 +27,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} min-h-screen bg-slate-50 text-slate-900 antialiased`}
       >
-        {children}
+        <AppHeader />
+        <div className="min-h-[calc(100vh-3.5rem)]">{children}</div>
       </body>
     </html>
   );

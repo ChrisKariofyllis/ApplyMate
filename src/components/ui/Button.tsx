@@ -36,11 +36,11 @@ export function Button({
         onClick?.();
       }}
       className={cn(
-        "inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 disabled:cursor-not-allowed disabled:opacity-60",
+        "inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium transition-all duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 disabled:cursor-not-allowed disabled:opacity-60",
         variant === "primary" &&
-          "bg-blue-600 text-white hover:bg-blue-700",
+          "bg-blue-600 text-white shadow-sm hover:bg-blue-700 active:bg-blue-800",
         variant === "secondary" &&
-          "border border-zinc-300 bg-white text-zinc-900 hover:bg-zinc-50",
+          "border border-slate-300 bg-white text-slate-900 shadow-sm hover:border-slate-400 hover:bg-slate-50 active:bg-slate-100",
         className
       )}
     >

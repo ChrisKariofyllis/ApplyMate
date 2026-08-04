@@ -25,7 +25,7 @@ export function Input({
       {label ? (
         <label
           htmlFor={inputId}
-          className="mb-1.5 block text-sm font-medium text-zinc-800"
+          className="mb-1.5 block text-sm font-medium text-slate-800"
         >
           {label}
         </label>
@@ -35,10 +35,10 @@ export function Input({
         aria-invalid={error ? true : undefined}
         aria-describedby={error ? errorId : undefined}
         className={cn(
-          "w-full rounded-md border bg-white px-3 py-2 text-sm text-zinc-900 outline-none transition-colors placeholder:text-zinc-400 focus:ring-2 focus:ring-blue-500",
+          "w-full rounded-lg border bg-white px-3 py-2.5 text-sm text-slate-900 shadow-sm outline-none transition-colors placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-blue-500",
           error
-            ? "border-red-500 focus:border-red-500 focus:ring-red-500"
-            : "border-zinc-300 focus:border-blue-500",
+            ? "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-500"
+            : "border-slate-300 focus-visible:border-blue-500",
           className
         )}
         {...props}

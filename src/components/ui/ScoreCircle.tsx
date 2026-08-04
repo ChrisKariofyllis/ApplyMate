@@ -17,7 +17,7 @@ function getScoreColor(score: number): string {
     return "#dc2626";
   }
   if (score <= 6) {
-    return "#ca8a04";
+    return "#d97706";
   }
   if (score <= 8) {
     return "#2563eb";
@@ -44,17 +44,17 @@ export function ScoreCircle({ score, size = "md" }: ScoreCircleProps) {
       role="img"
       aria-label={`Match score ${display} out of 10`}
       className={cn(
-        "relative inline-flex items-center justify-center rounded-full",
+        "relative inline-flex items-center justify-center rounded-full shadow-sm",
         sizeClasses[size]
       )}
       style={{
-        background: `conic-gradient(${color} ${percent}%, #e4e4e7 ${percent}% 100%)`,
+        background: `conic-gradient(${color} ${percent}%, #e2e8f0 ${percent}% 100%)`,
       }}
     >
       <div className="absolute inset-[10%] flex items-center justify-center rounded-full bg-white">
-        <span className="font-semibold text-zinc-900">
+        <span className="font-semibold text-slate-900">
           {display}
-          <span className="text-zinc-500">/10</span>
+          <span className="text-slate-500">/10</span>
         </span>
       </div>
     </div>
