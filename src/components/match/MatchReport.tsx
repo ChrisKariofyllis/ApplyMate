@@ -61,21 +61,6 @@ export function MatchReport({ match }: MatchReportProps) {
           )}
         </Card>
       </div>
-
-      <Card title="Clarification questions">
-        {match.questions.length === 0 ? (
-          <p className="text-sm text-zinc-500">No questions needed.</p>
-        ) : (
-          <ol className="list-decimal space-y-3 pl-5">
-            {match.questions.map((question) => (
-              <li key={question.factKey} className="text-sm text-zinc-800">
-                <p className="font-medium">{question.text}</p>
-                <p className="mt-1 text-zinc-600">{question.context}</p>
-              </li>
-            ))}
-          </ol>
-        )}
-      </Card>
     </div>
   );
 }

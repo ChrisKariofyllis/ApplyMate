@@ -396,8 +396,9 @@ export default function JobDetailPage() {
     factKey: string
   ) {
     if (!matchId) {
-      setError("Match not found.");
-      return;
+      const message = "Match not found.";
+      setError(message);
+      throw new Error(message);
     }
 
     setIsAnswering(true);
@@ -417,13 +418,30 @@ export default function JobDetailPage() {
       });
 
       if (!response.ok) {
-        setError(await readErrorMessage(response));
-        return;
+        const message = await readErrorMessage(response);
+        setError(message);
+        throw new Error(message);
       }
 
-      setSuccessMessage("Answer saved as a confirmed fact.");
-    } catch {
-      setError("Unable to save answer.");
+      setMatchResult((current) => {
+        if (!current) {
+          return current;
+        }
+        return {
+          ...current,
+          questions: current.questions.filter(
+            (question) => question.factKey !== factKey
+          ),
+        };
+      });
+      setSuccessMessage("Answer saved");
+    } catch (err) {
+      const message =
+        err instanceof Error && err.message
+          ? err.message
+          : "Unable to save answer.";
+      setError(message);
+      throw new Error(message);
     } finally {
       setIsAnswering(false);
     }
@@ -634,13 +652,7 @@ export default function JobDetailPage() {
                 onAnswer={handleAnswer}
                 isLoading={isAnswering}
               />
-            ) : (
-              <Card title="Clarification questions">
-                <p className="text-sm text-zinc-600">
-                  No clarification questions for this match.
-                </p>
-              </Card>
-            )}
+            ) : null}
 
             {matchId ? (
               <Card title="Resume">
