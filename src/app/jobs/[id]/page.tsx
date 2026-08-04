@@ -262,6 +262,9 @@ export default function JobDetailPage() {
   const [job, setJob] = useState<JobDetails | null>(null);
   const [matchId, setMatchId] = useState<string | null>(null);
   const [matchResult, setMatchResult] = useState<MatchResult | null>(null);
+  const [answeredAnswers, setAnsweredAnswers] = useState<
+    Record<string, string>
+  >({});
   const [isLoading, setIsLoading] = useState(true);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [isAnswering, setIsAnswering] = useState(false);
@@ -298,6 +301,7 @@ export default function JobDetailPage() {
         setJob(null);
         setMatchId(null);
         setMatchResult(null);
+        setAnsweredAnswers({});
         return;
       }
 
@@ -320,9 +324,11 @@ export default function JobDetailPage() {
       if (latest) {
         setMatchId(latest.id);
         setMatchResult(buildMatchResultFromDb(latest));
+        setAnsweredAnswers({});
       } else {
         setMatchId(null);
         setMatchResult(null);
+        setAnsweredAnswers({});
       }
     } catch {
       setError("Unable to load job details.");
@@ -335,6 +341,65 @@ export default function JobDetailPage() {
   useEffect(() => {
     void loadJob();
   }, [loadJob]);
+
+  useEffect(() => {
+    if (!matchResult || matchResult.questions.length === 0) {
+      return;
+    }
+
+    const questionKeys = new Set(
+      matchResult.questions.map((question) => question.factKey)
+    );
+    let cancelled = false;
+
+    async function loadAnsweredFacts() {
+      try {
+        const response = await fetch("/api/profile");
+        if (!response.ok) {
+          return;
+        }
+
+        const data = (await response.json()) as {
+          facts?: Array<{
+            key?: string;
+            value?: string;
+            confidence?: string;
+            allowedInCv?: boolean;
+          }>;
+        };
+
+        if (!Array.isArray(data.facts) || cancelled) {
+          return;
+        }
+
+        const next: Record<string, string> = {};
+        for (const fact of data.facts) {
+          if (
+            typeof fact.key !== "string" ||
+            typeof fact.value !== "string" ||
+            !questionKeys.has(fact.key) ||
+            fact.confidence !== "user_confirmed" ||
+            fact.allowedInCv !== true
+          ) {
+            continue;
+          }
+          next[fact.key] = fact.value;
+        }
+
+        if (!cancelled) {
+          setAnsweredAnswers(next);
+        }
+      } catch {
+        // Keep local answered state if profile facts cannot be loaded.
+      }
+    }
+
+    void loadAnsweredFacts();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [matchId, matchResult]);
 
   async function handleAnalyzeMatch() {
     if (!jobId || isAnalyzing) {
@@ -379,6 +444,7 @@ export default function JobDetailPage() {
           : [],
         recommendation: parseRecommendation(data.result.recommendation),
       });
+      setAnsweredAnswers({});
       setJob((current) =>
         current ? { ...current, status: "matched" } : current
       );
@@ -423,17 +489,10 @@ export default function JobDetailPage() {
         throw new Error(message);
       }
 
-      setMatchResult((current) => {
-        if (!current) {
-          return current;
-        }
-        return {
-          ...current,
-          questions: current.questions.filter(
-            (question) => question.factKey !== factKey
-          ),
-        };
-      });
+      setAnsweredAnswers((current) => ({
+        ...current,
+        [factKey]: answer,
+      }));
       setSuccessMessage("Answer saved");
     } catch (err) {
       const message =
@@ -646,11 +705,14 @@ export default function JobDetailPage() {
           <div className="space-y-6">
             <MatchReport match={matchResult} />
 
-            {matchResult.questions.length > 0 ? (
+            {matchId ? (
               <QuestionsPanel
+                key={matchId}
+                matchId={matchId}
                 questions={matchResult.questions}
                 onAnswer={handleAnswer}
                 isLoading={isAnswering}
+                initialAnswers={answeredAnswers}
               />
             ) : null}
 

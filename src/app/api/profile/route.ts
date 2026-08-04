@@ -85,6 +85,7 @@ export async function POST(request: Request) {
     const data = parsed.data;
     const experience = data.experience ?? [];
     const education = data.education ?? [];
+    const shouldReplaceFacts = data.facts !== undefined;
     const facts = data.facts ?? [];
 
     const experienceCreate = experience.map((item, index) => ({
@@ -142,9 +143,12 @@ export async function POST(request: Request) {
     }
 
     const profile = await prisma.$transaction(async (tx) => {
-      await tx.fact.deleteMany({ where: { profileId: existing.id } });
       await tx.experience.deleteMany({ where: { profileId: existing.id } });
       await tx.education.deleteMany({ where: { profileId: existing.id } });
+
+      if (shouldReplaceFacts) {
+        await tx.fact.deleteMany({ where: { profileId: existing.id } });
+      }
 
       return tx.profile.update({
         where: { id: existing.id },
@@ -157,7 +161,7 @@ export async function POST(request: Request) {
           summary: data.summary,
           experience: { create: experienceCreate },
           education: { create: educationCreate },
-          facts: { create: factsCreate },
+          ...(shouldReplaceFacts ? { facts: { create: factsCreate } } : {}),
         },
         include: profileInclude,
       });
