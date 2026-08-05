@@ -1,5 +1,9 @@
 # ApplyMate
 
+![ApplyMate UI](.github/hero-screenshot.png)
+
+> Career matching workspace that generates tailored resumes from confirmed facts.
+
 ApplyMate is a local AI career assistant that compares your profile against a job description and helps you generate a tailored resume from information you have confirmed.
 
 It is built as an open-core project: **ApplyMate Core** is the local/self-hosted MVP you can run today. **ApplyMate Cloud** is a planned hosted direction, not a shipped product.
