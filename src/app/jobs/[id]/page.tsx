@@ -98,6 +98,26 @@ function parseRequirements(
   return items;
 }
 
+function formatRequirementLevel(level: string): string {
+  const normalized = level.trim().toLowerCase().replaceAll("_", " ");
+  if (!normalized) {
+    return "Required";
+  }
+  return normalized.replace(/\b\w/g, (char) => char.toUpperCase());
+}
+
+function requirementLevelBadgeClass(level: string): string {
+  const normalized = level.trim().toLowerCase().replaceAll("_", " ");
+  if (normalized.includes("prefer") || normalized.includes("nice")) {
+    return "border-amber-500/30 bg-amber-500/10 text-amber-200/90";
+  }
+  return "border-slate-600/80 bg-slate-800/80 text-slate-300";
+}
+
+function formatYearsRequired(years: number): string {
+  return `${years}+ years`;
+}
+
 function parseQuestions(value: string | null | undefined): Question[] {
   const items: Question[] = [];
 
@@ -654,27 +674,46 @@ export default function JobDetailPage() {
           </details>
         </Card>
 
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid items-start gap-4 md:grid-cols-2">
           <Card title="Requirements">
             {requirements.length === 0 ? (
               <p className="text-sm text-slate-500">No requirements available.</p>
             ) : (
-              <ul className="flex flex-wrap gap-2">
-                {requirements.map((item) => (
-                  <li
-                    key={`${item.skill}-${item.level}`}
-                    className="rounded-full border border-cyan-400/40 bg-cyan-500/10 px-3 py-1.5 text-sm text-cyan-300"
-                  >
-                    <span className="font-medium">{item.skill}</span>
-                    <span className="text-cyan-500/80">
-                      {" "}
-                      · {item.level.replaceAll("_", " ")}
-                      {typeof item.yearsRequired === "number"
-                        ? ` · ${item.yearsRequired}y`
-                        : ""}
-                    </span>
-                  </li>
-                ))}
+              <ul className="divide-y divide-slate-800/90">
+                {requirements.map((item) => {
+                  const levelLabel = formatRequirementLevel(item.level);
+                  const yearsLabel =
+                    typeof item.yearsRequired === "number"
+                      ? formatYearsRequired(item.yearsRequired)
+                      : null;
+
+                  return (
+                    <li
+                      key={`${item.skill}-${item.level}`}
+                      className="flex items-start gap-3 py-3 first:pt-0 last:pb-0"
+                    >
+                      <span
+                        aria-hidden="true"
+                        className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-cyan-500/70"
+                      />
+                      <div className="min-w-0 flex-1 space-y-1.5">
+                        <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+                          <p className="text-sm leading-relaxed text-slate-200">
+                            {item.skill}
+                          </p>
+                          <span
+                            className={`inline-flex w-fit shrink-0 items-center rounded-md border px-2 py-0.5 text-[11px] font-medium tracking-wide ${requirementLevelBadgeClass(item.level)}`}
+                          >
+                            {levelLabel}
+                          </span>
+                        </div>
+                        {yearsLabel ? (
+                          <p className="text-xs text-slate-500">{yearsLabel}</p>
+                        ) : null}
+                      </div>
+                    </li>
+                  );
+                })}
               </ul>
             )}
           </Card>
@@ -684,14 +723,33 @@ export default function JobDetailPage() {
               <p className="text-sm text-slate-500">No nice-to-have items.</p>
             ) : (
               <ul className="flex flex-wrap gap-2">
-                {niceToHave.map((item) => (
-                  <li
-                    key={item}
-                    className="rounded-full border border-slate-600 bg-[#111111] px-3 py-1.5 text-sm text-slate-300"
-                  >
-                    {item}
-                  </li>
-                ))}
+                {niceToHave.map((item) => {
+                  const isLong = item.trim().length > 48;
+
+                  if (isLong) {
+                    return (
+                      <li
+                        key={item}
+                        className="flex w-full items-start gap-2.5 rounded-lg border border-slate-700/70 bg-transparent px-3 py-2 text-sm leading-relaxed text-slate-200 transition-colors hover:border-cyan-500/40"
+                      >
+                        <span
+                          aria-hidden="true"
+                          className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-slate-500"
+                        />
+                        <span>{item}</span>
+                      </li>
+                    );
+                  }
+
+                  return (
+                    <li
+                      key={item}
+                      className="rounded-full border border-slate-600/80 bg-transparent px-3 py-1.5 text-sm text-slate-200 transition-colors hover:border-cyan-500/50 hover:text-cyan-300"
+                    >
+                      {item}
+                    </li>
+                  );
+                })}
               </ul>
             )}
           </Card>
