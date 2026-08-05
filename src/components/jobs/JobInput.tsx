@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
-import { cn } from "@/lib/utils";
 
 type JobInputProps = {
   onSubmit: (data: { url?: string; text?: string }) => void | Promise<void>;
@@ -49,7 +48,7 @@ export function JobInput({ onSubmit, isLoading = false }: JobInputProps) {
       <div className="w-full">
         <label
           htmlFor="job-description"
-          className="mb-1.5 block text-sm font-medium text-zinc-800"
+          className="mb-1.5 block text-sm font-medium text-slate-300"
         >
           Job description
         </label>
@@ -61,15 +60,12 @@ export function JobInput({ onSubmit, isLoading = false }: JobInputProps) {
           disabled={isLoading}
           rows={8}
           placeholder="Paste the full job posting text here..."
-          className={cn(
-            "w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none transition-colors placeholder:text-zinc-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500",
-            "disabled:cursor-not-allowed disabled:opacity-60"
-          )}
+          className="field-textarea"
         />
       </div>
 
       {error ? (
-        <p role="alert" className="text-sm text-red-600">
+        <p role="alert" className="text-sm text-red-400">
           {error}
         </p>
       ) : null}

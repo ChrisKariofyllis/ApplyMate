@@ -3,18 +3,17 @@
 @tailwind utilities;
 
 :root {
-  --background: #f8fafc;
-  --foreground: #0f172a;
-  --navy: #0f172a;
-  --navy-soft: #1e293b;
-  --accent: #2563eb;
-  --accent-hover: #1d4ed8;
-  --surface: #ffffff;
-  --border: #e2e8f0;
-  --muted: #64748b;
-  --success: #16a34a;
-  --warning: #d97706;
-  --danger: #dc2626;
+  --background: #0a0a0a;
+  --foreground: #f8fafc;
+  --surface: #1a1a1a;
+  --border: #2a2a2a;
+  --accent: #06b6d4;
+  --accent-hover: #0891b2;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
 }
 
 body {
@@ -33,16 +32,67 @@ body {
 }
 
 ::selection {
-  background: color-mix(in srgb, var(--accent) 22%, white);
-  color: var(--navy);
+  background: color-mix(in srgb, var(--accent) 35%, transparent);
+  color: #f8fafc;
+}
+
+/* Dark scrollbar with cyan thumb */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #0891b2 #1a1a1a;
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #111111;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: #0891b2;
+  border-radius: 9999px;
+  border: 2px solid #111111;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: #06b6d4;
+}
+
+@layer components {
+  .app-container {
+    @apply mx-auto w-full max-w-5xl px-4 sm:px-6;
+  }
+
+  .page-shell {
+    @apply min-h-[calc(100vh-3.5rem)] bg-[#0a0a0a] px-4 py-8 text-slate-50 sm:px-6 sm:py-10;
+  }
+
+  .page-link {
+    @apply text-sm font-medium text-cyan-400 transition-colors hover:text-cyan-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-500;
+  }
+
+  .alert-error {
+    @apply rounded-xl border border-red-500/40 bg-red-500/10 px-3 py-2 text-sm text-red-400;
+  }
+
+  .alert-success {
+    @apply rounded-xl border border-emerald-500/40 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-400;
+  }
+
+  .field-textarea {
+    @apply w-full min-h-[96px] resize-y rounded-xl border border-slate-700 bg-[#111111] px-3 py-2.5 text-sm text-slate-50 outline-none transition-colors placeholder:text-slate-500 focus-visible:border-cyan-500 focus-visible:ring-2 focus-visible:ring-cyan-500 disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  .glow-cyan {
+    box-shadow: 0 0 24px color-mix(in srgb, #06b6d4 35%, transparent);
+  }
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
-  }
-
-  .app-container {
-    @apply mx-auto w-full max-w-5xl px-4 sm:px-6;
   }
 }

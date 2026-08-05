@@ -8,24 +8,24 @@ type ResumePreviewProps = {
 export function ResumePreview({ resume }: ResumePreviewProps) {
   return (
     <article className="space-y-4">
-      <Card className="border-zinc-300 shadow-none">
+      <div className="overflow-hidden rounded-xl border border-[#2a2a2a] bg-white p-6 text-slate-900 shadow-[0_20px_60px_rgba(0,0,0,0.45)] sm:p-8">
         <div className="space-y-6">
           {resume.sections.length === 0 ? (
-            <p className="text-sm text-zinc-500">No resume sections available.</p>
+            <p className="text-sm text-slate-500">No resume sections available.</p>
           ) : (
             resume.sections.map((section) => (
               <section key={section.title} className="space-y-2">
-                <h2 className="border-b border-zinc-300 pb-1 text-sm font-semibold uppercase tracking-wide text-zinc-900">
+                <h2 className="border-b border-slate-200 pb-1 text-sm font-semibold uppercase tracking-wide text-slate-900">
                   {section.title}
                 </h2>
-                <p className="whitespace-pre-line text-sm leading-relaxed text-zinc-800">
+                <p className="whitespace-pre-line text-sm leading-relaxed text-slate-700">
                   {section.content}
                 </p>
               </section>
             ))
           )}
         </div>
-      </Card>
+      </div>
 
       {resume.factsUsed.length > 0 ? (
         <Card title="Facts used">
@@ -33,7 +33,7 @@ export function ResumePreview({ resume }: ResumePreviewProps) {
             {resume.factsUsed.map((fact) => (
               <li
                 key={fact}
-                className="rounded-md bg-zinc-100 px-2 py-1 text-xs text-zinc-700"
+                className="rounded-full border border-cyan-400/40 bg-cyan-500/10 px-2.5 py-1 font-mono text-xs text-cyan-300"
               >
                 {fact}
               </li>

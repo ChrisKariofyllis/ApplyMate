@@ -14,15 +14,12 @@ function clampScore(score: number): number {
 
 function getScoreColor(score: number): string {
   if (score <= 3) {
-    return "#dc2626";
+    return "#ef4444";
   }
   if (score <= 6) {
-    return "#d97706";
+    return "#f59e0b";
   }
-  if (score <= 8) {
-    return "#2563eb";
-  }
-  return "#16a34a";
+  return "#06b6d4";
 }
 
 const sizeClasses = {
@@ -44,15 +41,15 @@ export function ScoreCircle({ score, size = "md" }: ScoreCircleProps) {
       role="img"
       aria-label={`Match score ${display} out of 10`}
       className={cn(
-        "relative inline-flex items-center justify-center rounded-full shadow-sm",
+        "relative inline-flex items-center justify-center rounded-full shadow-[0_0_24px_rgba(6,182,212,0.35)]",
         sizeClasses[size]
       )}
       style={{
-        background: `conic-gradient(${color} ${percent}%, #e2e8f0 ${percent}% 100%)`,
+        background: `conic-gradient(${color} ${percent}%, #2a2a2a ${percent}% 100%)`,
       }}
     >
-      <div className="absolute inset-[10%] flex items-center justify-center rounded-full bg-white">
-        <span className="font-semibold text-slate-900">
+      <div className="absolute inset-[10%] flex items-center justify-center rounded-full bg-[#111111]">
+        <span className="font-semibold text-slate-50">
           {display}
           <span className="text-slate-500">/10</span>
         </span>

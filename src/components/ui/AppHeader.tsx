@@ -23,20 +23,17 @@ export function AppHeader() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-800 bg-slate-900 text-white">
+    <header className="sticky top-0 z-50 border-b border-[#2a2a2a] bg-[#0a0a0a]/95 backdrop-blur-md">
       <div className="app-container flex h-14 items-center justify-between gap-4">
         <Link
           href="/"
-          className="rounded-sm text-lg font-semibold tracking-tight text-white transition-opacity hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400"
+          className="rounded-sm text-lg font-bold tracking-tight text-cyan-400 transition-colors hover:text-cyan-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-500"
           onClick={() => setMobileOpen(false)}
         >
           ApplyMate
         </Link>
 
-        <nav
-          aria-label="Main"
-          className="hidden items-center gap-1 sm:flex"
-        >
+        <nav aria-label="Main" className="hidden items-center gap-1 sm:flex">
           {NAV_LINKS.map((link) => {
             const active = isActivePath(pathname, link.href);
             return (
@@ -45,10 +42,10 @@ export function AppHeader() {
                 href={link.href}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "rounded-md px-3 py-1.5 text-sm font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400",
+                  "min-h-11 rounded-full px-4 py-2 text-sm font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-500",
                   active
-                    ? "bg-slate-800 text-white"
-                    : "text-slate-300 hover:bg-slate-800/70 hover:text-white"
+                    ? "bg-cyan-500/15 text-cyan-400 shadow-[0_0_16px_rgba(6,182,212,0.25)]"
+                    : "text-slate-400 hover:bg-[#1a1a1a] hover:text-slate-50"
                 )}
               >
                 {link.label}
@@ -59,7 +56,7 @@ export function AppHeader() {
 
         <button
           type="button"
-          className="inline-flex items-center justify-center rounded-md p-2 text-slate-200 transition-colors hover:bg-slate-800 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400 sm:hidden"
+          className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border border-[#2a2a2a] text-slate-300 transition-colors hover:border-cyan-500/50 hover:text-cyan-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-500 sm:hidden"
           aria-expanded={mobileOpen}
           aria-controls="mobile-nav"
           aria-label={mobileOpen ? "Close menu" : "Open menu"}
@@ -75,7 +72,7 @@ export function AppHeader() {
         <nav
           id="mobile-nav"
           aria-label="Mobile"
-          className="border-t border-slate-800 bg-slate-900 sm:hidden"
+          className="border-t border-[#2a2a2a] bg-[#0a0a0a] sm:hidden"
         >
           <div className="app-container flex flex-col gap-1 py-3">
             {NAV_LINKS.map((link) => {
@@ -87,10 +84,10 @@ export function AppHeader() {
                   aria-current={active ? "page" : undefined}
                   onClick={() => setMobileOpen(false)}
                   className={cn(
-                    "rounded-md px-3 py-2.5 text-sm font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400",
+                    "min-h-11 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-500",
                     active
-                      ? "bg-slate-800 text-white"
-                      : "text-slate-300 hover:bg-slate-800/70 hover:text-white"
+                      ? "bg-cyan-500/15 text-cyan-400"
+                      : "text-slate-400 hover:bg-[#1a1a1a] hover:text-slate-50"
                   )}
                 >
                   {link.label}

@@ -546,8 +546,8 @@ export default function JobDetailPage() {
 
   if (isLoading) {
     return (
-      <main className="min-h-screen bg-zinc-50 px-4 py-10">
-        <div className="mx-auto flex max-w-[900px] items-center gap-3 text-zinc-700">
+      <main className="page-shell">
+        <div className="mx-auto flex max-w-5xl items-center gap-3 text-slate-300">
           <LoadingSpinner className="h-5 w-5" />
           <p>Loading job details...</p>
         </div>
@@ -557,13 +557,10 @@ export default function JobDetailPage() {
 
   if (notFound) {
     return (
-      <main className="min-h-screen bg-zinc-50 px-4 py-10">
-        <div className="mx-auto max-w-[900px] space-y-4">
-          <h1 className="text-2xl font-bold text-zinc-900">Job not found</h1>
-          <Link
-            href="/jobs"
-            className="text-sm text-blue-700 underline underline-offset-4"
-          >
+      <main className="page-shell">
+        <div className="mx-auto max-w-5xl space-y-4">
+          <h1 className="text-2xl font-bold text-cyan-400">Job not found</h1>
+          <Link href="/jobs" className="page-link">
             Back to Jobs
           </Link>
         </div>
@@ -573,23 +570,17 @@ export default function JobDetailPage() {
 
   if (!job) {
     return (
-      <main className="min-h-screen bg-zinc-50 px-4 py-10">
-        <div className="mx-auto max-w-[900px] space-y-4">
-          <h1 className="text-2xl font-bold text-zinc-900">Job details</h1>
+      <main className="page-shell">
+        <div className="mx-auto max-w-5xl space-y-4">
+          <h1 className="text-2xl font-bold text-cyan-400">Job details</h1>
           {error ? (
-            <p
-              role="alert"
-              className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700"
-            >
+            <p role="alert" className="alert-error">
               {error}
             </p>
           ) : (
-            <p className="text-sm text-zinc-600">Unable to display this job.</p>
+            <p className="text-sm text-slate-400">Unable to display this job.</p>
           )}
-          <Link
-            href="/jobs"
-            className="text-sm text-blue-700 underline underline-offset-4"
-          >
+          <Link href="/jobs" className="page-link">
             Back to Jobs
           </Link>
         </div>
@@ -598,48 +589,43 @@ export default function JobDetailPage() {
   }
 
   return (
-    <main className="min-h-screen bg-zinc-50 px-4 py-8 sm:px-6 sm:py-10">
-      <div className="mx-auto max-w-[900px] space-y-6">
-        <header className="space-y-3">
-          <Link
-            href="/jobs"
-            className="text-sm text-blue-700 underline underline-offset-4"
-          >
+    <main className="page-shell">
+      <div className="mx-auto max-w-5xl space-y-6">
+        <Card className="space-y-3">
+          <Link href="/jobs" className="page-link">
             Back to Jobs
           </Link>
           <div className="flex flex-wrap items-center gap-3">
-            <h1 className="text-3xl font-bold tracking-tight text-zinc-900">
+            <h1 className="text-3xl font-bold tracking-tight text-cyan-400">
               {job.title}
             </h1>
             <Badge status={job.status} />
           </div>
-          <div className="space-y-1 text-sm text-zinc-600">
-            {job.company ? <p>{job.company}</p> : null}
+          <div className="space-y-1 text-sm text-slate-400">
+            {job.company ? (
+              <p className="font-medium text-slate-300">{job.company}</p>
+            ) : null}
             {job.location ? <p>{job.location}</p> : null}
-            {job.salary ? <p>{job.salary}</p> : null}
+            {job.salary ? (
+              <p className="font-mono text-xs text-slate-500">{job.salary}</p>
+            ) : null}
           </div>
-        </header>
+        </Card>
 
         {error ? (
-          <p
-            role="alert"
-            className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700"
-          >
+          <p role="alert" className="alert-error">
             {error}
           </p>
         ) : null}
 
         {successMessage ? (
-          <p
-            role="status"
-            className="rounded-md bg-emerald-50 px-3 py-2 text-sm text-emerald-800"
-          >
+          <p role="status" className="alert-success">
             {successMessage}
           </p>
         ) : null}
 
         <Card title="Job description">
-          <p className="whitespace-pre-wrap text-sm leading-relaxed text-zinc-800">
+          <p className="whitespace-pre-wrap text-sm leading-relaxed text-slate-300">
             {job.descriptionRaw}
           </p>
         </Card>
@@ -647,21 +633,22 @@ export default function JobDetailPage() {
         <div className="grid gap-4 md:grid-cols-2">
           <Card title="Requirements">
             {requirements.length === 0 ? (
-              <p className="text-sm text-zinc-500">No requirements available.</p>
+              <p className="text-sm text-slate-500">No requirements available.</p>
             ) : (
-              <ul className="space-y-3">
+              <ul className="flex flex-wrap gap-2">
                 {requirements.map((item) => (
                   <li
                     key={`${item.skill}-${item.level}`}
-                    className="text-sm text-zinc-800"
+                    className="rounded-full border border-cyan-400/40 bg-cyan-500/10 px-3 py-1.5 text-sm text-cyan-300"
                   >
-                    <p className="font-medium">{item.skill}</p>
-                    <p className="text-zinc-600">
-                      Level: {item.level.replaceAll("_", " ")}
+                    <span className="font-medium">{item.skill}</span>
+                    <span className="text-cyan-500/80">
+                      {" "}
+                      · {item.level.replaceAll("_", " ")}
                       {typeof item.yearsRequired === "number"
-                        ? ` · ${item.yearsRequired} years`
+                        ? ` · ${item.yearsRequired}y`
                         : ""}
-                    </p>
+                    </span>
                   </li>
                 ))}
               </ul>
@@ -670,11 +657,16 @@ export default function JobDetailPage() {
 
           <Card title="Nice to have">
             {niceToHave.length === 0 ? (
-              <p className="text-sm text-zinc-500">No nice-to-have items.</p>
+              <p className="text-sm text-slate-500">No nice-to-have items.</p>
             ) : (
-              <ul className="list-disc space-y-1 pl-5 text-sm text-zinc-800">
+              <ul className="flex flex-wrap gap-2">
                 {niceToHave.map((item) => (
-                  <li key={item}>{item}</li>
+                  <li
+                    key={item}
+                    className="rounded-full border border-slate-600 bg-[#111111] px-3 py-1.5 text-sm text-slate-300"
+                  >
+                    {item}
+                  </li>
                 ))}
               </ul>
             )}
@@ -683,13 +675,13 @@ export default function JobDetailPage() {
 
         <Card title="Match analysis">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-sm text-zinc-600">
+            <p className="text-sm text-slate-400">
               Compare this job with your career profile using only confirmed
               facts.
             </p>
             <Button
               type="button"
-              variant="primary"
+              variant="secondary"
               isLoading={isAnalyzing}
               disabled={isAnalyzing || isGeneratingResume || isAnswering}
               onClick={() => {
@@ -719,7 +711,7 @@ export default function JobDetailPage() {
             {matchId ? (
               <Card title="Resume">
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                  <p className="text-sm text-zinc-600">
+                  <p className="text-sm text-slate-400">
                     Generate a tailored resume from this match using only
                     allowed facts.
                   </p>

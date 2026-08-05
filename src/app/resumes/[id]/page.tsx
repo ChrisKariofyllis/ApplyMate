@@ -149,8 +149,8 @@ export default function ResumePage() {
 
   if (isLoading) {
     return (
-      <main className="min-h-screen bg-zinc-50 px-4 py-10">
-        <div className="mx-auto flex max-w-[900px] items-center gap-3 text-zinc-700">
+      <main className="page-shell">
+        <div className="mx-auto flex max-w-5xl items-center gap-3 text-slate-300">
           <LoadingSpinner className="h-5 w-5" />
           <p>Loading resume...</p>
         </div>
@@ -160,23 +160,17 @@ export default function ResumePage() {
 
   if (!data) {
     return (
-      <main className="min-h-screen bg-zinc-50 px-4 py-10">
-        <div className="mx-auto max-w-[900px] space-y-4">
-          <h1 className="text-2xl font-bold text-zinc-900">Resume</h1>
+      <main className="page-shell">
+        <div className="mx-auto max-w-5xl space-y-4">
+          <h1 className="text-2xl font-bold text-cyan-400">Resume</h1>
           {error ? (
-            <p
-              role="alert"
-              className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700"
-            >
+            <p role="alert" className="alert-error">
               {error}
             </p>
           ) : (
-            <p className="text-sm text-zinc-600">Resume not available.</p>
+            <p className="text-sm text-slate-400">Resume not available.</p>
           )}
-          <Link
-            href="/jobs"
-            className="text-sm text-blue-700 underline underline-offset-4"
-          >
+          <Link href="/jobs" className="page-link">
             Back to Jobs
           </Link>
         </div>
@@ -190,23 +184,20 @@ export default function ResumePage() {
   const jobId = data.resume.jobId;
 
   return (
-    <main className="min-h-screen bg-zinc-50 px-4 py-8 sm:px-6 sm:py-10">
-      <div className="mx-auto max-w-[900px] space-y-6">
+    <main className="page-shell">
+      <div className="mx-auto max-w-5xl space-y-6">
         <header className="space-y-3">
-          <Link
-            href={`/jobs/${jobId}`}
-            className="text-sm text-blue-700 underline underline-offset-4"
-          >
+          <Link href={`/jobs/${jobId}`} className="page-link">
             Back to Job
           </Link>
           <div className="flex flex-wrap items-center gap-3">
-            <h1 className="text-3xl font-bold tracking-tight text-zinc-900">
+            <h1 className="text-3xl font-bold tracking-tight text-cyan-400">
               Tailored Resume
             </h1>
             <Badge status={data.resume.status} />
           </div>
-          <div className="space-y-1 text-sm text-zinc-600">
-            <p>{profileName}</p>
+          <div className="space-y-1 text-sm text-slate-400">
+            <p className="text-slate-300">{profileName}</p>
             <p>
               {jobTitle}
               {company ? ` · ${company}` : ""}
@@ -215,29 +206,28 @@ export default function ResumePage() {
         </header>
 
         {error ? (
-          <p
-            role="alert"
-            className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700"
-          >
+          <p role="alert" className="alert-error">
             {error}
           </p>
         ) : null}
 
         {successMessage ? (
-          <p
-            role="status"
-            className="rounded-md bg-emerald-50 px-3 py-2 text-sm text-emerald-800"
-          >
+          <p role="status" className="alert-success">
             {successMessage}
           </p>
         ) : null}
 
         <Card>
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-sm text-zinc-600">
-              Preview the tailored resume, then download an ATS-friendly HTML
-              file.
-            </p>
+            <div>
+              <p className="text-sm text-slate-300">
+                Preview the tailored resume, then download an ATS-friendly HTML
+                file.
+              </p>
+              <p className="mt-1 font-mono text-xs text-slate-500">
+                Format: HTML export
+              </p>
+            </div>
             <Button
               type="button"
               variant="primary"

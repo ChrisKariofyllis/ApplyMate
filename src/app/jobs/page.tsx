@@ -184,21 +184,18 @@ export default function JobsPage() {
   }
 
   return (
-    <main className="min-h-screen bg-zinc-50 px-4 py-8 sm:px-6 sm:py-10">
-      <div className="mx-auto max-w-[900px] space-y-6">
+    <main className="page-shell">
+      <div className="mx-auto max-w-5xl space-y-6">
         <header className="space-y-2">
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <h1 className="text-3xl font-bold tracking-tight text-zinc-900">
+            <h1 className="text-3xl font-bold tracking-tight text-cyan-400">
               Jobs
             </h1>
-            <Link
-              href="/"
-              className="text-sm text-blue-700 underline underline-offset-4"
-            >
+            <Link href="/" className="page-link">
               Back to home
             </Link>
           </div>
-          <p className="max-w-2xl text-sm leading-relaxed text-zinc-600 sm:text-base">
+          <p className="max-w-2xl text-sm leading-relaxed text-slate-400 sm:text-base">
             Paste a job URL or description to analyze requirements, then open a
             job to run matching against your career profile.
           </p>
@@ -213,52 +210,49 @@ export default function JobsPage() {
         </Card>
 
         {analyzeError ? (
-          <p
-            role="alert"
-            className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700"
-          >
+          <p role="alert" className="alert-error">
             {analyzeError}
           </p>
         ) : null}
 
         {successMessage ? (
-          <p
-            role="status"
-            className="rounded-md bg-emerald-50 px-3 py-2 text-sm text-emerald-800"
-          >
+          <p role="status" className="alert-success">
             {successMessage}
           </p>
         ) : null}
 
         <section className="space-y-4" aria-live="polite">
-          <h2 className="text-xl font-semibold text-zinc-900">Saved jobs</h2>
+          <h2 className="text-xl font-bold text-slate-50">Saved jobs</h2>
 
           {isLoading ? (
-            <div className="flex items-center gap-3 text-zinc-700">
+            <div className="flex items-center gap-3 text-slate-300">
               <LoadingSpinner className="h-5 w-5" />
               <p>Loading jobs...</p>
             </div>
           ) : null}
 
           {!isLoading && loadError ? (
-            <p
-              role="alert"
-              className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700"
-            >
+            <p role="alert" className="alert-error">
               {loadError}
             </p>
           ) : null}
 
           {!isLoading && !loadError && jobs.length === 0 ? (
             <Card>
-              <p className="text-sm text-zinc-600">
-                No jobs yet. Analyze a job posting to get started.
-              </p>
+              <div className="space-y-2 text-center sm:py-6">
+                <p aria-hidden="true" className="text-3xl">
+                  📋
+                </p>
+                <p className="text-sm text-slate-400">
+                  No jobs yet. Analyze a job posting to get started.
+                </p>
+              </div>
             </Card>
           ) : null}
 
-          {!isLoading && !loadError
-            ? jobs.map((job) => {
+          {!isLoading && !loadError ? (
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {jobs.map((job) => {
                 const company = nullToEmpty(job.company);
                 const location = nullToEmpty(job.location);
                 const salary = nullToEmpty(job.salary);
@@ -269,27 +263,33 @@ export default function JobsPage() {
                 const preview = summary ?? truncateText(job.descriptionRaw);
 
                 return (
-                  <Card key={job.id}>
-                    <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                  <Card key={job.id} className="flex h-full flex-col">
+                    <div className="flex flex-1 flex-col gap-4">
                       <div className="space-y-2">
                         <div className="flex flex-wrap items-center gap-2">
-                          <h3 className="text-lg font-semibold text-zinc-900">
+                          <h3 className="text-lg font-semibold text-slate-50">
                             {job.title}
                           </h3>
                           <Badge status={job.status} />
                         </div>
 
-                        <div className="space-y-1 text-sm text-zinc-600">
+                        <div className="space-y-1 text-sm text-slate-400">
                           {company ? <p>{company}</p> : null}
                           {location ? <p>{location}</p> : null}
-                          {salary ? <p>{salary}</p> : null}
+                          {salary ? (
+                            <p className="font-mono text-xs text-slate-500">
+                              {salary}
+                            </p>
+                          ) : null}
                           {job.createdAt ? (
-                            <p>Added {formatDate(job.createdAt)}</p>
+                            <p className="font-mono text-xs text-slate-500">
+                              Added {formatDate(job.createdAt)}
+                            </p>
                           ) : null}
                         </div>
 
                         {preview ? (
-                          <p className="text-sm leading-relaxed text-zinc-700">
+                          <p className="text-sm leading-relaxed text-slate-300">
                             {preview}
                           </p>
                         ) : null}
@@ -297,15 +297,16 @@ export default function JobsPage() {
 
                       <Link
                         href={`/jobs/${job.id}`}
-                        className="inline-flex items-center justify-center rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+                        className="mt-auto inline-flex min-h-11 items-center justify-center rounded-full border border-cyan-500/70 px-4 py-2 text-sm font-semibold text-cyan-400 transition-all hover:scale-[1.02] hover:bg-cyan-500/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-500"
                       >
                         View Match
                       </Link>
                     </div>
                   </Card>
                 );
-              })
-            : null}
+              })}
+            </div>
+          ) : null}
         </section>
       </div>
     </main>

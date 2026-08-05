@@ -170,26 +170,31 @@ export function QuestionsPanel({
               return (
                 <div
                   key={`${index}-${question.factKey}`}
-                  className="space-y-2"
+                  className={cn(
+                    "space-y-2 rounded-xl border p-4 transition-colors",
+                    isAnswered
+                      ? "border-cyan-500/40 bg-cyan-500/5"
+                      : "border-[#2a2a2a] bg-[#111111]"
+                  )}
                 >
                   <div className="flex flex-wrap items-center gap-2">
                     <label
                       htmlFor={fieldId}
-                      className="block text-sm font-medium text-zinc-900"
+                      className="block text-sm font-medium text-slate-50"
                     >
                       {question.text}
                     </label>
                     {isAnswered ? (
-                      <span className="rounded-md bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-800">
-                        Answered
+                      <span className="inline-flex items-center gap-1 rounded-full border border-cyan-400/50 bg-cyan-500/10 px-2.5 py-0.5 text-xs font-medium text-cyan-300">
+                        <span aria-hidden="true">✓</span> Answered
                       </span>
                     ) : null}
                   </div>
-                  <p className="text-sm text-zinc-600">{question.context}</p>
+                  <p className="text-sm text-slate-400">{question.context}</p>
 
                   {isAnswered ? (
-                    <div className="rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2">
-                      <p className="text-sm text-zinc-800 whitespace-pre-wrap">
+                    <div className="rounded-xl border border-cyan-500/30 bg-[#0a0a0a] px-3 py-2">
+                      <p className="whitespace-pre-wrap text-sm text-slate-300">
                         {answers[question.factKey] ?? ""}
                       </p>
                     </div>
@@ -203,10 +208,7 @@ export function QuestionsPanel({
                       }
                       disabled={disabled}
                       rows={3}
-                      className={cn(
-                        "w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none transition-colors placeholder:text-zinc-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500",
-                        "disabled:cursor-not-allowed disabled:opacity-60"
-                      )}
+                      className="field-textarea"
                     />
                   )}
 
@@ -228,13 +230,13 @@ export function QuestionsPanel({
             })}
 
             {answerSuccessMessage ? (
-              <p role="status" className="text-sm text-emerald-800">
+              <p role="status" className="text-sm text-emerald-400">
                 {answerSuccessMessage}
               </p>
             ) : null}
 
             {answerError ? (
-              <p role="alert" className="text-sm text-red-600">
+              <p role="alert" className="text-sm text-red-400">
                 {answerError}
               </p>
             ) : null}
@@ -244,7 +246,7 @@ export function QuestionsPanel({
 
       <Card title="Additional details">
         <div className="space-y-4">
-          <p className="text-sm text-zinc-600">
+          <p className="text-sm text-slate-400">
             Saved details become part of your career profile and may be used for
             future job matches and tailored resumes.
           </p>
@@ -252,7 +254,7 @@ export function QuestionsPanel({
           <div className="space-y-2">
             <label
               htmlFor="additional-details"
-              className="block text-sm font-medium text-zinc-900"
+              className="block text-sm font-medium text-slate-50"
             >
               Do you want to add more details or experiences for this job?
             </label>
@@ -264,20 +266,17 @@ export function QuestionsPanel({
               disabled={detailsDisabled}
               rows={4}
               placeholder="Type any additional skills, projects, achievements, responsibilities, or context here..."
-              className={cn(
-                "w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none transition-colors placeholder:text-zinc-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500",
-                "disabled:cursor-not-allowed disabled:opacity-60"
-              )}
+              className="field-textarea"
             />
           </div>
 
-          <label className="flex items-start gap-2 text-sm text-zinc-800">
+          <label className="flex min-h-11 items-start gap-3 text-sm text-slate-300">
             <input
               type="checkbox"
               checked={allowedInCv}
               onChange={(event) => setAllowedInCv(event.target.checked)}
               disabled={detailsDisabled}
-              className="mt-0.5 h-4 w-4 rounded border-zinc-300 text-blue-600 focus:ring-blue-500 disabled:cursor-not-allowed"
+              className="mt-1 h-4 w-4 rounded border-slate-600 bg-[#111111] text-cyan-500 focus:ring-cyan-500 disabled:cursor-not-allowed"
             />
             <span>Use these details in future tailored resumes</span>
           </label>
@@ -295,13 +294,13 @@ export function QuestionsPanel({
           </Button>
 
           {detailsSuccessMessage ? (
-            <p role="status" className="text-sm text-emerald-800">
+            <p role="status" className="text-sm text-emerald-400">
               {detailsSuccessMessage}
             </p>
           ) : null}
 
           {detailsError ? (
-            <p role="alert" className="text-sm text-red-600">
+            <p role="alert" className="text-sm text-red-400">
               {detailsError}
             </p>
           ) : null}

@@ -15,25 +15,25 @@ export function MatchReport({ match }: MatchReportProps) {
   return (
     <div className="space-y-6">
       <Card className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="space-y-2">
-          <h2 className="text-xl font-semibold text-zinc-900">Match report</h2>
+        <div className="space-y-3">
+          <h2 className="text-xl font-bold text-cyan-400">Match report</h2>
           <Badge status={formatRecommendation(match.recommendation)} />
         </div>
-        <ScoreCircle score={match.overallScore} size="md" />
+        <ScoreCircle score={match.overallScore} size="lg" />
       </Card>
 
       <div className="grid gap-4 md:grid-cols-2">
         <Card title="Strengths">
           {match.strengths.length === 0 ? (
-            <p className="text-sm text-zinc-500">No strengths listed.</p>
+            <p className="text-sm text-slate-500">No strengths listed.</p>
           ) : (
             <ul className="space-y-2">
               {match.strengths.map((item) => (
                 <li
                   key={item}
-                  className="flex gap-2 text-sm text-zinc-800"
+                  className="flex gap-2 text-sm text-slate-300"
                 >
-                  <span aria-hidden="true" className="text-emerald-600">
+                  <span aria-hidden="true" className="text-emerald-400">
                     ✓
                   </span>
                   <span>{item}</span>
@@ -45,13 +45,13 @@ export function MatchReport({ match }: MatchReportProps) {
 
         <Card title="Gaps">
           {match.gaps.length === 0 ? (
-            <p className="text-sm text-zinc-500">No gaps listed.</p>
+            <p className="text-sm text-slate-500">No gaps listed.</p>
           ) : (
             <ul className="space-y-2">
               {match.gaps.map((item) => (
                 <li
                   key={item}
-                  className="flex gap-2 rounded-md bg-amber-50 px-2 py-1.5 text-sm text-amber-900"
+                  className="flex gap-2 rounded-lg border border-amber-500/30 bg-amber-500/10 px-2.5 py-1.5 text-sm text-amber-300"
                 >
                   <span aria-hidden="true">!</span>
                   <span>{item}</span>

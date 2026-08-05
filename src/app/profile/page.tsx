@@ -162,8 +162,32 @@ function mapEducation(items: unknown): EducationForm[] {
   });
 }
 
-const textareaClassName =
-  "w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none transition-colors placeholder:text-zinc-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 resize-y min-h-[96px]";
+const textareaClassName = "field-textarea";
+
+function getInitials(fullName: string): string {
+  const parts = fullName
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2);
+  if (parts.length === 0) {
+    return "?";
+  }
+  return parts.map((part) => part[0]?.toUpperCase() ?? "").join("");
+}
+
+function experienceDurationLabel(item: ExperienceForm): string {
+  if (item.isCurrent) {
+    return "Current";
+  }
+  if (item.startDate.trim() && item.endDate.trim()) {
+    return `${item.startDate} – ${item.endDate}`;
+  }
+  if (item.startDate.trim()) {
+    return item.startDate;
+  }
+  return "Experience";
+}
 
 export default function ProfilePage() {
   const [step, setStep] = useState(1);
@@ -434,8 +458,8 @@ export default function ProfilePage() {
 
   if (isLoading) {
     return (
-      <main className="min-h-screen bg-zinc-50 px-4 py-10">
-        <div className="mx-auto flex max-w-[900px] items-center gap-3 text-zinc-700">
+      <main className="page-shell">
+        <div className="mx-auto flex max-w-5xl items-center gap-3 text-slate-300">
           <LoadingSpinner className="h-5 w-5" />
           <p>Loading profile...</p>
         </div>
@@ -444,52 +468,56 @@ export default function ProfilePage() {
   }
 
   return (
-    <main className="min-h-screen bg-zinc-50 px-4 py-8 sm:px-6 sm:py-10">
-      <div className="mx-auto max-w-[900px] space-y-6">
-        <header className="space-y-2">
+    <main className="page-shell">
+      <div className="mx-auto max-w-5xl space-y-6">
+        <header className="space-y-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <h1 className="text-3xl font-bold tracking-tight text-zinc-900">
-              Career Profile
-            </h1>
-            <Link
-              href="/"
-              className="text-sm text-blue-700 underline underline-offset-4"
-            >
+            <div className="flex items-center gap-4">
+              <div
+                aria-hidden="true"
+                className="flex h-14 w-14 items-center justify-center rounded-full border-2 border-cyan-400 bg-cyan-500/10 text-lg font-bold text-cyan-300 shadow-[0_0_20px_rgba(6,182,212,0.35)]"
+              >
+                {getInitials(personal.fullName)}
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold tracking-tight text-cyan-400">
+                  Career Profile
+                </h1>
+                <p className="mt-1 text-sm font-medium text-slate-400">
+                  Step {step} of 3
+                </p>
+              </div>
+            </div>
+            <Link href="/" className="page-link">
               Back to home
             </Link>
           </div>
-          <p className="max-w-2xl text-sm leading-relaxed text-zinc-600 sm:text-base">
+          <p className="max-w-2xl text-sm leading-relaxed text-slate-400 sm:text-base">
             Build your career profile once. ApplyMate uses it for job matching
             and tailored resumes without inventing experience.
-          </p>
-          <p className="text-sm font-medium text-zinc-700">
-            Step {step} of 3
           </p>
         </header>
 
         {loadError ? (
-          <p role="alert" className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
+          <p role="alert" className="alert-error">
             {loadError}
           </p>
         ) : null}
 
         {saveError ? (
-          <p role="alert" className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
+          <p role="alert" className="alert-error">
             {saveError}
           </p>
         ) : null}
 
         {successMessage ? (
-          <p
-            role="status"
-            className="rounded-md bg-emerald-50 px-3 py-2 text-sm text-emerald-800"
-          >
+          <p role="status" className="alert-success">
             {successMessage}
           </p>
         ) : null}
 
         {step === 1 ? (
-          <Card title="Personal information">
+          <Card title="👤 Personal information">
             <div className="grid gap-4 sm:grid-cols-2">
               <Input
                 label="Full name"
@@ -530,7 +558,7 @@ export default function ProfilePage() {
               <div className="sm:col-span-2">
                 <label
                   htmlFor="summary"
-                  className="mb-1.5 block text-sm font-medium text-zinc-800"
+                  className="mb-1.5 block text-sm font-medium text-slate-300"
                 >
                   Summary
                 </label>
@@ -551,140 +579,171 @@ export default function ProfilePage() {
         {step === 2 ? (
           <div className="space-y-4">
             {fieldErrors.experience ? (
-              <p role="alert" className="text-sm text-red-600">
+              <p role="alert" className="text-sm text-red-400">
                 {fieldErrors.experience}
               </p>
             ) : null}
 
             {experience.length === 0 ? (
-              <Card title="Work experience">
-                <p className="text-sm text-zinc-600">
+              <Card title="💼 Work experience">
+                <p className="text-sm text-slate-400">
                   No experience added yet. Add your first role to continue.
                 </p>
               </Card>
             ) : (
-              experience.map((item, index) => (
-                <Card key={`experience-${index}`} title={`Experience ${index + 1}`}>
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    <Input
-                      label="Company"
-                      value={item.company}
-                      onChange={(event) =>
-                        updateExperience(index, "company", event.target.value)
-                      }
-                      error={fieldErrors.experienceItems?.[index]}
-                      required
+              <div className="relative space-y-4 border-l-2 border-cyan-500/40 pl-5 sm:pl-6">
+                {experience.map((item, index) => (
+                  <Card
+                    key={`experience-${index}`}
+                    className="relative"
+                    title={`Experience ${index + 1}`}
+                  >
+                    <span
+                      aria-hidden="true"
+                      className="absolute -left-[1.7rem] top-7 h-3 w-3 rounded-full border-2 border-cyan-400 bg-[#0a0a0a] sm:-left-[1.95rem]"
                     />
-                    <Input
-                      label="Title"
-                      value={item.title}
-                      onChange={(event) =>
-                        updateExperience(index, "title", event.target.value)
-                      }
-                      required
-                    />
-                    <Input
-                      label="Start date"
-                      value={item.startDate}
-                      onChange={(event) =>
-                        updateExperience(index, "startDate", event.target.value)
-                      }
-                      placeholder="YYYY-MM"
-                      required
-                    />
-                    <Input
-                      label="End date"
-                      value={item.endDate}
-                      onChange={(event) =>
-                        updateExperience(index, "endDate", event.target.value)
-                      }
-                      placeholder="YYYY-MM"
-                      disabled={item.isCurrent}
-                    />
-                    <div className="sm:col-span-2">
-                      <label className="inline-flex items-center gap-2 text-sm text-zinc-800">
-                        <input
-                          type="checkbox"
-                          checked={item.isCurrent}
+                    <div className="mb-4">
+                      <span className="inline-flex rounded-full border border-cyan-400/50 bg-cyan-500/10 px-2.5 py-0.5 text-xs font-medium text-cyan-300">
+                        {experienceDurationLabel(item)}
+                      </span>
+                    </div>
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <Input
+                        label="Company"
+                        value={item.company}
+                        onChange={(event) =>
+                          updateExperience(index, "company", event.target.value)
+                        }
+                        error={fieldErrors.experienceItems?.[index]}
+                        required
+                      />
+                      <Input
+                        label="Title"
+                        value={item.title}
+                        onChange={(event) =>
+                          updateExperience(index, "title", event.target.value)
+                        }
+                        required
+                      />
+                      <Input
+                        label="Start date"
+                        value={item.startDate}
+                        onChange={(event) =>
+                          updateExperience(index, "startDate", event.target.value)
+                        }
+                        placeholder="YYYY-MM"
+                        required
+                      />
+                      <Input
+                        label="End date"
+                        value={item.endDate}
+                        onChange={(event) =>
+                          updateExperience(index, "endDate", event.target.value)
+                        }
+                        placeholder="YYYY-MM"
+                        disabled={item.isCurrent}
+                      />
+                      <div className="sm:col-span-2">
+                        <label className="inline-flex min-h-11 items-center gap-2 text-sm text-slate-300">
+                          <input
+                            type="checkbox"
+                            checked={item.isCurrent}
+                            onChange={(event) =>
+                              updateExperience(
+                                index,
+                                "isCurrent",
+                                event.target.checked
+                              )
+                            }
+                            className="h-4 w-4 rounded border-slate-600 bg-[#111111] text-cyan-500 focus:ring-cyan-500"
+                          />
+                          Current role
+                        </label>
+                      </div>
+                      <div className="sm:col-span-2">
+                        <label
+                          htmlFor={`experience-description-${index}`}
+                          className="mb-1.5 block text-sm font-medium text-slate-300"
+                        >
+                          Description
+                        </label>
+                        <textarea
+                          id={`experience-description-${index}`}
+                          value={item.description}
                           onChange={(event) =>
                             updateExperience(
                               index,
-                              "isCurrent",
-                              event.target.checked
+                              "description",
+                              event.target.value
                             )
                           }
-                          className="h-4 w-4 rounded border-zinc-300"
+                          className={textareaClassName}
+                          rows={3}
                         />
-                        Current role
-                      </label>
+                      </div>
+                      <div className="sm:col-span-2">
+                        <label
+                          htmlFor={`experience-achievements-${index}`}
+                          className="mb-1.5 block text-sm font-medium text-slate-300"
+                        >
+                          Achievements
+                        </label>
+                        <textarea
+                          id={`experience-achievements-${index}`}
+                          value={item.achievements}
+                          onChange={(event) =>
+                            updateExperience(
+                              index,
+                              "achievements",
+                              event.target.value
+                            )
+                          }
+                          className={textareaClassName}
+                          rows={3}
+                        />
+                      </div>
+                      <div className="sm:col-span-2">
+                        <Input
+                          label="Tools"
+                          value={item.tools}
+                          onChange={(event) =>
+                            updateExperience(index, "tools", event.target.value)
+                          }
+                        />
+                        {item.tools.trim() ? (
+                          <ul className="mt-2 flex flex-wrap gap-2">
+                            {item.tools
+                              .split(/[,|]/)
+                              .map((tool) => tool.trim())
+                              .filter(Boolean)
+                              .map((tool) => (
+                                <li
+                                  key={`${index}-${tool}`}
+                                  className="rounded-full border border-cyan-400/40 bg-cyan-500/10 px-2.5 py-0.5 text-xs text-cyan-300"
+                                >
+                                  {tool}
+                                </li>
+                              ))}
+                          </ul>
+                        ) : null}
+                      </div>
                     </div>
-                    <div className="sm:col-span-2">
-                      <label
-                        htmlFor={`experience-description-${index}`}
-                        className="mb-1.5 block text-sm font-medium text-zinc-800"
-                      >
-                        Description
-                      </label>
-                      <textarea
-                        id={`experience-description-${index}`}
-                        value={item.description}
-                        onChange={(event) =>
-                          updateExperience(
-                            index,
-                            "description",
-                            event.target.value
+                    <div className="mt-4">
+                      <Button
+                        type="button"
+                        variant="secondary"
+                        onClick={() =>
+                          setExperience((current) =>
+                            current.filter((_, itemIndex) => itemIndex !== index)
                           )
                         }
-                        className={textareaClassName}
-                        rows={3}
-                      />
-                    </div>
-                    <div className="sm:col-span-2">
-                      <label
-                        htmlFor={`experience-achievements-${index}`}
-                        className="mb-1.5 block text-sm font-medium text-zinc-800"
                       >
-                        Achievements
-                      </label>
-                      <textarea
-                        id={`experience-achievements-${index}`}
-                        value={item.achievements}
-                        onChange={(event) =>
-                          updateExperience(
-                            index,
-                            "achievements",
-                            event.target.value
-                          )
-                        }
-                        className={textareaClassName}
-                        rows={3}
-                      />
+                        Remove experience
+                      </Button>
                     </div>
-                    <div className="sm:col-span-2">
-                      <Input
-                        label="Tools"
-                        value={item.tools}
-                        onChange={(event) =>
-                          updateExperience(index, "tools", event.target.value)
-                        }
-                      />
-                    </div>
-                  </div>
-                  <div className="mt-4">
-                    <Button
-                      type="button"
-                      variant="secondary"
-                      onClick={() =>
-                        setExperience((current) =>
-                          current.filter((_, itemIndex) => itemIndex !== index)
-                        )
-                      }
-                    >
-                      Remove experience
-                    </Button>
-                  </div>
-                </Card>
-              ))
+                  </Card>
+                ))}
+              </div>
             )}
 
             <Button
@@ -702,78 +761,88 @@ export default function ProfilePage() {
         {step === 3 ? (
           <div className="space-y-4">
             {fieldErrors.education ? (
-              <p role="alert" className="text-sm text-red-600">
+              <p role="alert" className="text-sm text-red-400">
                 {fieldErrors.education}
               </p>
             ) : null}
 
             {education.length === 0 ? (
-              <Card title="Education">
-                <p className="text-sm text-zinc-600">
+              <Card title="🎓 Education">
+                <p className="text-sm text-slate-400">
                   No education added yet. You can save without education or add
                   entries below.
                 </p>
               </Card>
             ) : (
-              education.map((item, index) => (
-                <Card key={`education-${index}`} title={`Education ${index + 1}`}>
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    <Input
-                      label="Institution"
-                      value={item.institution}
-                      onChange={(event) =>
-                        updateEducation(index, "institution", event.target.value)
-                      }
-                      error={fieldErrors.educationItems?.[index]}
-                      required
+              <div className="relative space-y-4 border-l-2 border-cyan-500/40 pl-5 sm:pl-6">
+                {education.map((item, index) => (
+                  <Card
+                    key={`education-${index}`}
+                    className="relative"
+                    title={`Education ${index + 1}`}
+                  >
+                    <span
+                      aria-hidden="true"
+                      className="absolute -left-[1.7rem] top-7 h-3 w-3 rounded-full border-2 border-cyan-400 bg-[#0a0a0a] sm:-left-[1.95rem]"
                     />
-                    <Input
-                      label="Degree"
-                      value={item.degree}
-                      onChange={(event) =>
-                        updateEducation(index, "degree", event.target.value)
-                      }
-                      required
-                    />
-                    <Input
-                      label="Field"
-                      value={item.field}
-                      onChange={(event) =>
-                        updateEducation(index, "field", event.target.value)
-                      }
-                    />
-                    <Input
-                      label="Start date"
-                      value={item.startDate}
-                      onChange={(event) =>
-                        updateEducation(index, "startDate", event.target.value)
-                      }
-                      placeholder="YYYY"
-                    />
-                    <Input
-                      label="End date"
-                      value={item.endDate}
-                      onChange={(event) =>
-                        updateEducation(index, "endDate", event.target.value)
-                      }
-                      placeholder="YYYY"
-                    />
-                  </div>
-                  <div className="mt-4">
-                    <Button
-                      type="button"
-                      variant="secondary"
-                      onClick={() =>
-                        setEducation((current) =>
-                          current.filter((_, itemIndex) => itemIndex !== index)
-                        )
-                      }
-                    >
-                      Remove education
-                    </Button>
-                  </div>
-                </Card>
-              ))
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <Input
+                        label="Institution"
+                        value={item.institution}
+                        onChange={(event) =>
+                          updateEducation(index, "institution", event.target.value)
+                        }
+                        error={fieldErrors.educationItems?.[index]}
+                        required
+                      />
+                      <Input
+                        label="Degree"
+                        value={item.degree}
+                        onChange={(event) =>
+                          updateEducation(index, "degree", event.target.value)
+                        }
+                        required
+                      />
+                      <Input
+                        label="Field"
+                        value={item.field}
+                        onChange={(event) =>
+                          updateEducation(index, "field", event.target.value)
+                        }
+                      />
+                      <Input
+                        label="Start date"
+                        value={item.startDate}
+                        onChange={(event) =>
+                          updateEducation(index, "startDate", event.target.value)
+                        }
+                        placeholder="YYYY"
+                      />
+                      <Input
+                        label="End date"
+                        value={item.endDate}
+                        onChange={(event) =>
+                          updateEducation(index, "endDate", event.target.value)
+                        }
+                        placeholder="YYYY"
+                      />
+                    </div>
+                    <div className="mt-4">
+                      <Button
+                        type="button"
+                        variant="secondary"
+                        onClick={() =>
+                          setEducation((current) =>
+                            current.filter((_, itemIndex) => itemIndex !== index)
+                          )
+                        }
+                      >
+                        Remove education
+                      </Button>
+                    </div>
+                  </Card>
+                ))}
+              </div>
             )}
 
             <Button
