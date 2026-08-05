@@ -624,10 +624,34 @@ export default function JobDetailPage() {
           </p>
         ) : null}
 
-        <Card title="Job description">
-          <p className="whitespace-pre-wrap text-sm leading-relaxed text-slate-300">
-            {job.descriptionRaw}
-          </p>
+        <Card>
+          <details className="group">
+            <summary className="flex cursor-pointer list-none flex-col gap-3 rounded-lg outline-none transition-colors marker:content-none [&::-webkit-details-marker]:hidden focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-500">
+              <div className="flex items-center justify-between gap-3">
+                <h2 className="text-lg font-bold tracking-tight text-cyan-400">
+                  Job description
+                </h2>
+                <span
+                  aria-hidden="true"
+                  className="shrink-0 text-cyan-400 transition-transform duration-200 group-open:rotate-180"
+                >
+                  ▾
+                </span>
+              </div>
+              <p className="line-clamp-4 whitespace-pre-wrap text-sm leading-relaxed text-slate-300 group-open:hidden">
+                {job.descriptionRaw}
+              </p>
+              <span className="text-sm font-medium text-cyan-400 group-open:hidden">
+                Show full job description
+              </span>
+              <span className="hidden text-sm font-medium text-cyan-400 group-open:inline">
+                Hide full job description
+              </span>
+            </summary>
+            <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-slate-300">
+              {job.descriptionRaw}
+            </p>
+          </details>
         </Card>
 
         <div className="grid gap-4 md:grid-cols-2">
