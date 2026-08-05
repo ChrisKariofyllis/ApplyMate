@@ -142,18 +142,35 @@ ${JSON.stringify(profile.education, null, 2)}`;
       );
     }
 
+    const matchData = {
+      overallScore: result.overallScore,
+      strengthsJson: JSON.stringify(result.strengths),
+      gapsJson: JSON.stringify(result.gaps),
+      questionsJson: JSON.stringify(result.questions),
+      recommendation: result.recommendation,
+    };
+
     const savedMatch = await prisma.$transaction(async (tx) => {
-      const match = await tx.match.create({
-        data: {
+      const existingMatch = await tx.match.findFirst({
+        where: {
           jobId: job.id,
           profileId: profile.id,
-          overallScore: result.overallScore,
-          strengthsJson: JSON.stringify(result.strengths),
-          gapsJson: JSON.stringify(result.gaps),
-          questionsJson: JSON.stringify(result.questions),
-          recommendation: result.recommendation,
         },
+        orderBy: { createdAt: "desc" },
       });
+
+      const match = existingMatch
+        ? await tx.match.update({
+            where: { id: existingMatch.id },
+            data: matchData,
+          })
+        : await tx.match.create({
+            data: {
+              jobId: job.id,
+              profileId: profile.id,
+              ...matchData,
+            },
+          });
 
       await tx.job.update({
         where: { id: job.id },
